@@ -14,6 +14,7 @@ namespace SalesWebMvc.Models
         public double BaseSalary { get; set; }
 
         public Department Department { get; set; }
+        public int DepartmentId { get; set; }//Foreign Key
         private ICollection<SalesRecord> _sales { get; set; } = new List<SalesRecord>();
 
         public Seller() { }
