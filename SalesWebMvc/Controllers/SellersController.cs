@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesWebMvc.Models;
+using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
@@ -8,9 +9,12 @@ namespace SalesWebMvc.Controllers
     {
         private SellerService _sellerService;
 
-        public SellersController(SellerService sellerService)
+        private DepartmentService _departmentService;
+
+        public SellersController(SellerService sellerService, DepartmentService departmentService)
         {
             _sellerService = sellerService;
+            _departmentService = departmentService;
         }
 
         public IActionResult Index()
@@ -21,15 +25,18 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var departments = _departmentService.FindAll();
+            var viewModel = new SellerFormViewModel() { Departments = departments };//Objeto com construtor anonimo
+            return View(viewModel);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller obj)
+        public IActionResult Create(Seller seller)//Seller recebe tambem de forma autonoma um objeto do tipo Department
         {
-            _sellerService.Insert(obj);
+            
+            _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
     }
